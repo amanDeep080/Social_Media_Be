@@ -1,36 +1,34 @@
 <p align="center">
-  <img src="https://media.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif" width="100%" alt="Animated Coding Banner"/>
-</p>
-
-<h1 align="center">🚀 Social Media Backend API</h1>
-
-<p align="center">
-  <b>Spring Boot + PostgreSQL + JPA + Validation</b><br>
-  A Production-Ready REST API built with Clean Layered Architecture
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00C9FF,100:92FE9D&height=200&section=header&text=Social%20Media%20Backend%20API&fontSize=40&fontColor=ffffff&animation=fadeIn&fontAlignY=35"/>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Backend-SpringBoot-green?style=for-the-badge"/>
+  <b>Spring Boot • PostgreSQL • JPA • Hibernate • Validation</b>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Backend-SpringBoot-success?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/Database-PostgreSQL-blue?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/ORM-Hibernate-orange?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/Architecture-Layered-success?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Architecture-Layered-brightgreen?style=for-the-badge"/>
 </p>
 
 ---
 
 # 📌 Project Overview
 
-This is a fully functional Social Media Backend API built using:
+A production-ready Social Media Backend built using Spring Boot and PostgreSQL.
 
-- Spring Boot
-- Spring Data JPA (Hibernate ORM)
-- PostgreSQL
-- Lombok
-- Validation API
+This project demonstrates:
 
-The project follows clean layered architecture:
+✔ Clean REST API Design  
+✔ Layered Architecture  
+✔ ORM with Hibernate  
+✔ Entity Relationships  
+✔ Validation & Exception Handling  
 
-Controller → Service → Repository → Database
+Architecture Flow:
+Client → Controller → Service → Repository → Database
 
 ---
 
@@ -40,10 +38,9 @@ Controller → Service → Repository → Database
 ✅ Create Posts linked to Users  
 ✅ Add Comments to Posts  
 ✅ Like / Unlike Posts  
-✅ Validation using `@Valid`, `@NotBlank`, `@Email`  
+✅ Validation using @Valid, @NotBlank, @Email  
 ✅ Proper HTTP Status Codes (201, 200, 400, 404, 204)  
 ✅ Global Exception Handling  
-✅ Clean REST API Design  
 
 ---
 
@@ -51,34 +48,10 @@ Controller → Service → Repository → Database
 src/main/java/com/example/demo
 │
 ├── controller
-│ ├── UserController
-│ ├── PostController
-│ ├── CommentController
-│ └── LikeController
-│
 ├── service
-│ ├── UserService
-│ ├── PostService
-│ ├── CommentService
-│ └── LikeService
-│
 ├── repository
-│ ├── UserRepo
-│ ├── PostRepo
-│ ├── CommentRepo
-│ └── LikeRepo
-│
 ├── model
-│ ├── User
-│ ├── Post
-│ ├── Comment
-│ └── Like
-│
 └── exception
-├── ApiError
-├── BadRequestException
-├── NotFoundException
-└── GlobalExceptionHandler
 
 ---
 
@@ -111,16 +84,47 @@ src/main/java/com/example/demo
 
 # 🔗 API Endpoints
 
-## 👤 User APIs
+## 👤 User
 
-### ➤ Create User
-POST /users
+POST /users  
+GET /users  
+GET /users/by-email?email=value  
 
-```json
-{
-  "username": "aman01",
-  "email": "aman01@gmail.com",
-  "password": "secret123",
-  "fullName": "Amandeep Kumar"
-}
-Returns: 201 Created
+## 📝 Post
+
+POST /posts  
+GET /posts  
+GET /posts/user/{userId}  
+DELETE /posts/{id}  
+
+## 💬 Comment
+
+POST /comments  
+DELETE /comments/{id}  
+
+## ❤️ Like
+
+POST /likes  
+DELETE /likes/{id}  
+
+---
+
+# 🔒 Validation
+
+Uses:
+
+- @NotBlank
+- @Email
+- @Size
+- @Valid
+
+Invalid requests return structured 400 responses.
+
+---
+
+# ⚙️ How to Run
+
+1️⃣ Clone the repository  
+2️⃣ Configure PostgreSQL in application.properties  
+3️⃣ Run:
+mvn spring-boot:run
