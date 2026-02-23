@@ -25,6 +25,23 @@ This is a fully functional Social Media Backend API built using:
 - Validation API
 
 The project follows clean layered architecture:
+
+---
+
+# 🧠 Key Features
+
+✅ Create & Manage Users  
+✅ Create Posts linked to Users  
+✅ Add Comments to Posts  
+✅ Like / Unlike Posts  
+✅ Validation using `@Valid`, `@NotBlank`, `@Email`  
+✅ Proper HTTP Status Codes (201, 200, 400, 404, 204)  
+✅ Global Exception Handling  
+✅ Clean REST API Design  
+
+---
+
+# 🗂️ Project Structure
 src/main/java/com/example/demo
 │
 ├── controller
@@ -57,26 +74,11 @@ src/main/java/com/example/demo
 ├── NotFoundException
 └── GlobalExceptionHandler
 
-
----
-
-# 🛠️ Technologies Used
-
-| Technology | Purpose |
-|------------|----------|
-| Spring Boot | Backend Framework |
-| Spring Data JPA | ORM & Database Handling |
-| Hibernate | JPA Implementation |
-| PostgreSQL | Relational Database |
-| Lombok | Boilerplate Code Reduction |
-| Validation API | Input Validation |
-| Maven | Dependency Management |
-
 ---
 
 # 🗄️ Database Schema
 
-### 🧑 User
+### 👤 User
 - id (Primary Key)
 - username
 - email
@@ -106,9 +108,7 @@ src/main/java/com/example/demo
 ## 👤 User APIs
 
 ### ➤ Create User
-
 POST /users
-
 
 ```json
 {
@@ -117,19 +117,13 @@ POST /users
   "password": "secret123",
   "fullName": "Amandeep Kumar"
 }
-
 Returns: 201 Created
-
 ➤ Get All Users
 GET /users
-
 Returns: 200 OK
-
 ➤ Get User by Email
 GET /users/by-email?email=aman01@gmail.com
-
 Returns: 200 OK
-
 📝 Post APIs
 ➤ Create Post
 POST /posts
@@ -138,9 +132,7 @@ POST /posts
   "imageUrl": "https://image.com/photo.jpg",
   "user": { "id": 1 }
 }
-
 Returns: 201 Created
-
 ➤ Get All Posts
 GET /posts
 ➤ Get Posts by User
@@ -213,7 +205,7 @@ spring.jpa.hibernate.ddl-auto=update
 3️⃣ Run Application
 mvn spring-boot:run
 
-Server starts on:
+Server runs on:
 
 http://localhost:8080
 🧠 Architecture Highlights
