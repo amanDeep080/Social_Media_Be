@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://media.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif" width="100%" alt="Animated Coding Banner"/>
+</p>
+
 <h1 align="center">🚀 Social Media Backend API</h1>
 
 <p align="center">
@@ -25,6 +29,8 @@ This is a fully functional Social Media Backend API built using:
 - Validation API
 
 The project follows clean layered architecture:
+
+Controller → Service → Repository → Database
 
 ---
 
@@ -110,7 +116,7 @@ src/main/java/com/example/demo
 ### ➤ Create User
 POST /users
 
-
+```json
 {
   "username": "aman01",
   "email": "aman01@gmail.com",
@@ -118,122 +124,3 @@ POST /users
   "fullName": "Amandeep Kumar"
 }
 Returns: 201 Created
-➤ Get All Users
-GET /users
-Returns: 200 OK
-➤ Get User by Email
-GET /users/by-email?email=aman01@gmail.com
-Returns: 200 OK
-📝 Post APIs
-➤ Create Post
-POST /posts
-{
-  "caption": "My first post",
-  "imageUrl": "https://image.com/photo.jpg",
-  "user": { "id": 1 }
-}
-Returns: 201 Created
-➤ Get All Posts
-GET /posts
-➤ Get Posts by User
-GET /posts/user/{userId}
-
-Example:
-
-GET /posts/user/1
-➤ Delete Post
-DELETE /posts/{id}
-
-Returns: 204 No Content
-
-💬 Comment APIs
-➤ Add Comment
-POST /comments
-{
-  "content": "Nice post!",
-  "post": { "id": 1 }
-}
-
-Returns: 201 Created
-
-➤ Delete Comment
-DELETE /comments/{id}
-
-Returns: 204 No Content
-
-❤️ Like APIs
-➤ Like a Post
-POST /likes
-{
-  "user": { "id": 1 },
-  "post": { "id": 1 }
-}
-➤ Unlike Post
-DELETE /likes/{id}
-
-Returns: 204 No Content
-
-🔒 Validation
-
-This project uses:
-
-@NotBlank
-
-@Email
-
-@Size
-
-@Valid
-
-Invalid requests return:
-
-400 Bad Request
-
-With structured JSON error response.
-
-⚙️ How to Run the Project
-1️⃣ Clone Repository
-git clone <your-repo-url>
-2️⃣ Configure PostgreSQL
-
-Update application.properties:
-
-spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
-spring.datasource.username=postgres
-spring.datasource.password=your_password
-spring.jpa.hibernate.ddl-auto=update
-3️⃣ Run Application
-mvn spring-boot:run
-
-Server runs on:
-
-http://localhost:8080
-🧠 Architecture Highlights
-
-✔ Clean Layered Architecture
-✔ Constructor-Based Dependency Injection
-✔ ORM using Hibernate
-✔ Entity Relationships (OneToMany, ManyToOne)
-✔ Proper REST Standards
-✔ Professional Error Handling
-
-🚀 Future Enhancements
-
-JWT Authentication
-
-Password Encryption (BCrypt)
-
-Pagination
-
-DTO Layer
-
-Swagger Documentation
-
-Deployment on Render / Railway
-
-👨‍💻 Author
-
-Amandeep Kumar
-Java | Spring Boot | Backend Developer
-
-<p align="center"> 🔥 Built with Passion & Clean Code Principles 🔥 </p> ```
