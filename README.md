@@ -128,3 +128,35 @@ Invalid requests return structured 400 responses.
 2️⃣ Configure PostgreSQL in application.properties  
 3️⃣ Run:
 mvn spring-boot:run
+
+Server starts at:
+http://localhost:8080
+
+---
+
+# 🧠 Tech Stack
+
+- Spring Boot
+- Spring Data JPA
+- Hibernate ORM
+- PostgreSQL
+- Lombok
+- Validation API
+- Maven
+
+---
+
+# 🚀 Future Enhancements
+
+- JWT Authentication
+- BCrypt Password Encryption
+- Pagination
+- DTO Layer
+- Swagger Documentation
+- Cloud Deployment
+
+---
+
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:92FE9D,100:00C9FF&height=120&section=footer"/>
+</p>
