@@ -110,7 +110,7 @@ src/main/java/com/example/demo
 ### ➤ Create User
 POST /users
 
-```json
+
 {
   "username": "aman01",
   "email": "aman01@gmail.com",
