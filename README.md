@@ -2,6 +2,8 @@
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00C9FF,100:92FE9D&height=200&section=header&text=Social%20Media%20Backend%20API&fontSize=40&fontColor=ffffff&animation=fadeIn&fontAlignY=35"/>
 </p>
 
+<h1 align="center">🚀 Social Media Backend API</h1>
+
 <p align="center">
   <b>Spring Boot • PostgreSQL • JPA • Hibernate • Validation</b>
 </p>
@@ -28,6 +30,7 @@ This project demonstrates:
 ✔ Validation & Exception Handling  
 
 Architecture Flow:
+
 Client → Controller → Service → Repository → Database
 
 ---
@@ -45,13 +48,40 @@ Client → Controller → Service → Repository → Database
 ---
 
 # 🗂️ Project Structure
+
+```
 src/main/java/com/example/demo
 │
 ├── controller
+│   ├── UserController
+│   ├── PostController
+│   ├── CommentController
+│   └── LikeController
+│
 ├── service
+│   ├── UserService
+│   ├── PostService
+│   ├── CommentService
+│   └── LikeService
+│
 ├── repository
+│   ├── UserRepo
+│   ├── PostRepo
+│   ├── CommentRepo
+│   └── LikeRepo
+│
 ├── model
+│   ├── User
+│   ├── Post
+│   ├── Comment
+│   └── Like
+│
 └── exception
+    ├── ApiError
+    ├── BadRequestException
+    ├── NotFoundException
+    └── GlobalExceptionHandler
+```
 
 ---
 
@@ -125,11 +155,23 @@ Invalid requests return structured 400 responses.
 # ⚙️ How to Run
 
 1️⃣ Clone the repository  
-2️⃣ Configure PostgreSQL in application.properties  
-3️⃣ Run:
+git clone <your-repo-url>
+
+2️⃣ Configure PostgreSQL in application.properties
+
+```
+spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+spring.datasource.username=postgres
+spring.datasource.password=your_password
+spring.jpa.hibernate.ddl-auto=update
+```
+
+3️⃣ Run the application
+
 mvn spring-boot:run
 
 Server starts at:
+
 http://localhost:8080
 
 ---
@@ -159,4 +201,10 @@ http://localhost:8080
 
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:92FE9D,100:00C9FF&height=120&section=footer"/>
+</p>
+
+---
+
+<p align="center">
+🔥 Built with Passion & Clean Code Principles 🔥
 </p>
