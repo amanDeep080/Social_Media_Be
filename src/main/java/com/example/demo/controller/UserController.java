@@ -1,37 +1,73 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.demo.dto.UserMiniResponse;
 import com.example.demo.model.User;
-import com.example.demo.service.UserService;
+import com.example.demo.repository.FollowRepo;
+import com.example.demo.repository.UserRepo;
+import com.example.demo.service.FollowService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/users")
 @RequiredArgsConstructor
+@RequestMapping("/users")
 public class UserController {
 
-    private final UserService userService;
+    private final UserRepo userRepo;
+    private final FollowRepo followRepo;
+    private final FollowService followService; // ✅ ADD THIS
 
-    @GetMapping("/by-email")
-    public ResponseEntity<String> getUserByEmail(@RequestParam("email") String email) {
-        return ResponseEntity.ok(userService.getUserByEmail(email));
-    }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<UserMiniResponse>> listUsers(Principal principal) {
+
+        User me = userRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<UserMiniResponse> users = userRepo.findAll().stream()
+                .filter(u -> !u.getId().equals(me.getId())) // ✅ FILTER BY ID
+                .map(u -> new UserMiniResponse(u.getId(), u.getUsername(), u.getFullName(), u.getEmail()))
+                .toList();
+
+        return ResponseEntity.ok(users);
     }
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userService.createUser(user));
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{userId}/follow")
+    public ResponseEntity<Map<String, Boolean>> toggleFollow(
+            @PathVariable("userId") Long userId,
+            Principal principal) {
+
+        User me = userRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (me.getId().equals(userId)) {
+            throw new RuntimeException("You cannot follow yourself");
+        }
+
+        boolean active = followService.toggleFollow(me.getId(), userId);
+
+        return ResponseEntity.ok(Map.of("active", active));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{userId}/is-following")
+    public ResponseEntity<Map<String, Boolean>> isFollowing(
+            @PathVariable("userId") Long userId,
+            Principal principal) {
+
+        User me = userRepo.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean active = followRepo.existsByFollowerIdAndFollowingId(me.getId(), userId);
+        return ResponseEntity.ok(Map.of("active", active));
     }
 }

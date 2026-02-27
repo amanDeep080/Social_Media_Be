@@ -3,9 +3,9 @@ package com.example.demo.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.NotFoundException;
+import com.example.demo.dto.CreatePostRequest;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
 import com.example.demo.repository.PostRepo;
@@ -18,38 +18,42 @@ import lombok.RequiredArgsConstructor;
 public class PostService {
 
     private final PostRepo postRepo;
-    private final UserRepo userRepo;   // ✅ ADD THIS
+    private final UserRepo userRepo;
 
-    public Post createPost(Post post) {
+    @Transactional
+    public Post createPost(CreatePostRequest req, String email) {
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (post.getUser() == null || post.getUser().getId() == null) {
-            throw new BadRequestException("User id is required to create post");
-        }
+        Post p = new Post();
+        p.setContent(req.getContent().trim());
+        p.setImageUrl(req.getImageUrl() == null || req.getImageUrl().trim().isEmpty() ? null : req.getImageUrl().trim());
+        p.setUser(user);
 
-        Long userId = post.getUser().getId();
-
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new BadRequestException("User not found with id: " + userId));
-
-        post.setUser(user);
-
-        return postRepo.save(post);
+        return postRepo.save(p);
     }
 
     public List<Post> getAllPosts() {
         return postRepo.findAll();
     }
 
-    public List<Post> getPostByUserId(Long userId) {
-        return postRepo.findByUser_Id(userId);
-    }
-
     public Post getPostById(Long id) {
         return postRepo.findById(id)
-            .orElseThrow(() -> new NotFoundException("Post not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Post not found"));
     }
 
-    public void deletePostById(Long id) {
-        postRepo.deleteById(id);
+    public List<Post> getPostByUserId(Long userId) {
+        return postRepo.findByUserId(userId);
+    }
+
+    @Transactional
+    public void deletePostById(Long postId, String requesterEmail) {
+        Post post = getPostById(postId);
+
+        if (!post.getUser().getEmail().equals(requesterEmail)) {
+            throw new RuntimeException("You can delete only your own post");
+        }
+
+        postRepo.delete(post);
     }
 }

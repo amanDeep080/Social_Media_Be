@@ -1,33 +1,62 @@
 package com.example.demo.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import java.security.Principal;
+import java.util.List;
+
+import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.RequiredArgsConstructor;
-import jakarta.validation.Valid;
-
+import com.example.demo.dto.*;
 import com.example.demo.model.Comment;
 import com.example.demo.service.CommentService;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 @RestController
-@RequestMapping("/comments")
 @RequiredArgsConstructor
+@RequestMapping("/comments")
 public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping
-    public ResponseEntity<Comment> addComment(@Valid @RequestBody Comment comment) {
-        Comment savedComment = commentService.addComment(comment);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(savedComment);
+    private CommentResponse toDto(Comment c) {
+        return new CommentResponse(
+                c.getId(),
+                c.getContent(),
+                c.getCreatedAt(),
+                c.getUser().getId(),
+                c.getUser().getUsername(),
+                c.getUser().getFullName(),
+                c.getUser().getEmail()
+        );
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable("id") Long id) {
-        commentService.deleteComment(id);
+    @GetMapping("/post/{postId}")
+    public ResponseEntity<List<CommentResponse>> getComments(
+            @PathVariable("postId") Long postId) {
+
+        return ResponseEntity.ok(
+                commentService.getComments(postId).stream().map(this::toDto).toList()
+        );
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/post/{postId}")
+    public ResponseEntity<CommentResponse> addComment(
+            @PathVariable("postId") Long postId,
+            @Valid @RequestBody CreateCommentRequest req,
+            Principal principal) {
+
+        Comment c = commentService.addComment(postId, req, principal.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(toDto(c));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId, Principal principal) {
+        commentService.deleteComment(commentId, principal.getName());
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,41 +1,48 @@
 package com.example.demo.service;
 
 import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.model.Like;
-import com.example.demo.model.Post;
-import com.example.demo.model.User;
-import com.example.demo.repository.LikeRepo;
-import com.example.demo.repository.PostRepo;
-import com.example.demo.repository.UserRepo;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class LikeService {
 
-    private final LikeRepo likeRepo;
     private final UserRepo userRepo;
     private final PostRepo postRepo;
+    private final PostLikeRepo likeRepo;
 
-    public Like likePost(Like like) {
-
-        Long userId = like.getUser().getId();
-        Long postId = like.getPost().getId();
-
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found: " + userId));
+    @Transactional
+    public boolean toggleLike(Long postId, String email) {
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         Post post = postRepo.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found: " + postId));
+                .orElseThrow(() -> new RuntimeException("Post not found"));
 
-        like.setUser(user);
-        like.setPost(post);
-
-        return likeRepo.save(like);
+        return likeRepo.findByPostIdAndUserId(post.getId(), user.getId())
+                .map(existing -> {
+                    likeRepo.delete(existing);
+                    return false; // unliked
+                })
+                .orElseGet(() -> {
+                    PostLike like = new PostLike();
+                    like.setPost(post);
+                    like.setUser(user);
+                    likeRepo.save(like);
+                    return true; // liked
+                });
     }
 
-    public void dislikePost(Long id) {
-        likeRepo.deleteById(id);
+    public long likeCount(Long postId) {
+        return likeRepo.countByPostId(postId);
+    }
+
+    public boolean likedByMe(Long postId, Long userId) {
+        return likeRepo.existsByPostIdAndUserId(postId, userId);
     }
 }
